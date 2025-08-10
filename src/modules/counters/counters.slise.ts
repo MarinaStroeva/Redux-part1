@@ -1,23 +1,23 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import type { AppState } from "../../store";
 
+export type CounterId = string;
+
 type CounterState = {
   counter: number;
 };
 
 type CountersState = Record<CounterId, CounterState | undefined>;
 
-export type CounterId = string;
+const createCounterState = (): CounterState => ({ counter: 0 });
 
 export const incrementAction = createAction<{ counterId: CounterId }>(
-  "countres/increment"
+  "counters/increment"
 );
 
 export const decrementAction = createAction<{
   counterId: CounterId;
-}>("countres/decrement");
-
-const initialCounterState: CounterState = { counter: 0 };
+}>("counters/decrement");
 
 const initialCountersState: CountersState = {};
 
@@ -27,14 +27,14 @@ export const countersReducer = createReducer(
     builder.addCase(incrementAction, (state, action) => {
       const { counterId } = action.payload;
       if (!state[counterId]) {
-        state[counterId] = initialCounterState;
+        state[counterId] = createCounterState();
       }
       state[counterId].counter++;
     });
     builder.addCase(decrementAction, (state, action) => {
       const { counterId } = action.payload;
       if (!state[counterId]) {
-        state[counterId] = initialCounterState;
+        state[counterId] = createCounterState();
       }
       state[counterId].counter--;
     });
